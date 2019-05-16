@@ -6,10 +6,14 @@ import taskforinternship.purchases_back.dao.PurchaseDAO;
 import taskforinternship.purchases_back.models.Purchase;
 import taskforinternship.purchases_back.models.ResponseTransfer;
 import taskforinternship.purchases_back.models.User;
+import taskforinternship.purchases_back.restTemplates.MainRestTemplate;
 import taskforinternship.purchases_back.services.impl.UserServiceImpl;
 
+import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class PurchaseService {
@@ -20,6 +24,7 @@ public class PurchaseService {
     @Autowired
     UserServiceImpl userServiceImpl;
 
+
     public ResponseTransfer savePurchase(int id, Purchase purchase){
 
         User user = userServiceImpl.findOneById(id);
@@ -29,16 +34,27 @@ public class PurchaseService {
     }
 
     public List<Purchase> findAllByUserId(int id){
-
-        return purchaseDAO.findAllByUserId(id);
+        List<Purchase> purchases = purchaseDAO.findAllByUserId(id);
+        Collections.sort(purchases);
+        return purchases;
     }
 
-    public ResponseTransfer deleteByDate(Date date){
-        boolean responseOnDelete = purchaseDAO.deleteAllByDate(date);
-        if(responseOnDelete){
-            return new ResponseTransfer("All purchases from: "+date.toString()+" were deleted");
+    public ResponseTransfer deleteAllByUserIdAndDate(int id, Date date){
+
+        AtomicInteger counter = new AtomicInteger();
+        List<Purchase> purchases = purchaseDAO.findAllByUserId(id);
+        purchases.forEach(purchase -> {
+            if (purchase.getDate().compareTo(date) == 0){
+                counter.getAndIncrement();
+                purchaseDAO.delete(purchase);
+            }
+        });
+        if(counter.intValue()>0){
+            return new ResponseTransfer(
+                    "There were deleted: "+counter.intValue()+" purchases");
         }else {
-            return new ResponseTransfer("There are no purchases from: "+date.toString());
+            return new ResponseTransfer("No purchases of this date!");
         }
     }
+
 }

@@ -52,7 +52,6 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/").permitAll() // by default method get
                 .antMatchers(HttpMethod.POST, "/login", "/saveUser").permitAll()
-                //.antMatchers("/verification/{jwt}").permitAll()
                 .anyRequest().authenticated()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .and()

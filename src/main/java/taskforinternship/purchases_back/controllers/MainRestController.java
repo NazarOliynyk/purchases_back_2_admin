@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import taskforinternship.purchases_back.models.Purchase;
 import taskforinternship.purchases_back.models.ResponseTransfer;
 import taskforinternship.purchases_back.models.User;
+import taskforinternship.purchases_back.services.CountRatesService;
 import taskforinternship.purchases_back.services.PurchaseService;
 import taskforinternship.purchases_back.services.impl.UserServiceImpl;
 
@@ -19,6 +20,9 @@ public class MainRestController {
 
     @Autowired
     PurchaseService purchaseService;
+
+    @Autowired
+    CountRatesService countRatesService;
 
     @CrossOrigin(origins = "*")
     @PostMapping("/saveUser")
@@ -44,15 +48,24 @@ public class MainRestController {
     @CrossOrigin(origins = "*")
     @GetMapping("/getPurchases/{id}")
     public List<Purchase> getPurchases(@PathVariable("id") int id){
-        System.out.println("/getPurchases/{id}  WORKS");
+
         return purchaseService.findAllByUserId(id);
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/deleteByDate")
-    public ResponseTransfer deleteByDate(@RequestBody Date date){
-
-        return purchaseService.deleteByDate(date);
+    @PostMapping("/deleteByDate/{id}")
+    public ResponseTransfer deleteByDate(@PathVariable("id") int id,
+                                         @RequestBody ResponseTransfer responseTransfer){
+        Date date = responseTransfer.getDate();
+        return purchaseService.deleteAllByUserIdAndDate(id, date);
     }
 
+    @CrossOrigin(origins = "*")
+    @GetMapping("/report/{id}")
+    public ResponseTransfer report(@PathVariable("id") int id,
+                           @RequestBody ResponseTransfer responseTransfer){
+        String year = responseTransfer.getText();
+        double sum = countRatesService.count(year, id);
+        return new ResponseTransfer(sum);
+    }
 }
