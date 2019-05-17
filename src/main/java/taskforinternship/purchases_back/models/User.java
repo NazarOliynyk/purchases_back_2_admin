@@ -19,11 +19,13 @@ public class User implements UserDetails{
     private String username;
     private String password;
 
+
     @OneToMany(
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
-            mappedBy = "user")
-    private List<Purchase> purchases = new ArrayList<>();
+            mappedBy = "user"
+    )
+    List<Purchase> purchases = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -49,15 +51,6 @@ public class User implements UserDetails{
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-
-    public List<Purchase> getPurchases() {
-        return purchases;
-    }
-
-    public void setPurchases(List<Purchase> purchases) {
-        this.purchases = purchases;
     }
 
     private boolean accountNonExpired = true;
