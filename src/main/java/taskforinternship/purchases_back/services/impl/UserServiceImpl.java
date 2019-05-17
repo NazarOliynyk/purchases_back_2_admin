@@ -10,8 +10,6 @@ import taskforinternship.purchases_back.models.ResponseTransfer;
 import taskforinternship.purchases_back.models.User;
 import taskforinternship.purchases_back.services.UserService;
 
-import java.util.List;
-
 @Service
 public class UserServiceImpl implements UserService {
 

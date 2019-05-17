@@ -61,11 +61,10 @@ public class MainRestController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/report/{id}")
+    @PostMapping("/report/{id}")
     public ResponseTransfer report(@PathVariable("id") int id,
                            @RequestBody ResponseTransfer responseTransfer){
         String year = responseTransfer.getText();
-        double sum = countRatesService.count(year, id);
-        return new ResponseTransfer(sum);
+        return new ResponseTransfer(countRatesService.count(year, id));
     }
 }

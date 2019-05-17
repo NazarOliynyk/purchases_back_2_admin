@@ -6,10 +6,7 @@ import taskforinternship.purchases_back.dao.PurchaseDAO;
 import taskforinternship.purchases_back.models.Purchase;
 import taskforinternship.purchases_back.models.ResponseTransfer;
 import taskforinternship.purchases_back.models.User;
-import taskforinternship.purchases_back.restTemplates.MainRestTemplate;
 import taskforinternship.purchases_back.services.impl.UserServiceImpl;
-
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;

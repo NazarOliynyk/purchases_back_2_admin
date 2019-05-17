@@ -14,7 +14,7 @@ import java.util.Date;
 public class ResponseTransfer {
 
     String text;
-    double price;
+    double sum;
     Date date;
 
     public ResponseTransfer(String text) {
@@ -25,7 +25,7 @@ public class ResponseTransfer {
         this.date = date;
     }
 
-    public ResponseTransfer(double price) {
-        this.price = price;
+    public ResponseTransfer(double sum) {
+        this.sum = sum;
     }
 }

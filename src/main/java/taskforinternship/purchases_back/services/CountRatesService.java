@@ -1,15 +1,14 @@
 package taskforinternship.purchases_back.services;
 
+import org.decimal4j.util.DoubleRounder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import taskforinternship.purchases_back.dao.PurchaseDAO;
 import taskforinternship.purchases_back.models.Purchase;
 import taskforinternship.purchases_back.restTemplates.MainRestTemplate;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CountRatesService {
@@ -19,9 +18,10 @@ public class CountRatesService {
     @Autowired
     MainRestTemplate mainRestTemplate;
 
-    private double sum = 0;
+    private double sum;
 
     private double getRate(Purchase purchase){
+
         double rate = 0;
         try {
            rate= mainRestTemplate.read(purchase);
@@ -38,17 +38,18 @@ public class CountRatesService {
     }
 
     public double count(String year, int id){
+        sum = 0;
         List<Purchase> purchases = purchaseDAO.findAllByUserId(id);
-        List<Purchase> purchasesOfYear = new ArrayList<>();
-        purchases.forEach(p->{
-            if(yearEquals(year, p)){
-                purchasesOfYear.add(p);
-            }
-        });
+
+        List<Purchase> purchasesOfYear = purchases.stream()
+                .filter(p->yearEquals(year, p))
+                .collect(Collectors.toList());
+
         purchasesOfYear.forEach(purchase -> {
             double priceUAH = purchase.getPrice()*getRate(purchase);
             sum+= priceUAH;
         });
-        return sum;
+
+        return DoubleRounder.round(sum, 2);
     }
 }

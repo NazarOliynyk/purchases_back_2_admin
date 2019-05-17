@@ -9,9 +9,6 @@ import java.util.List;
 
 public interface PurchaseDAO extends JpaRepository<Purchase, Integer> {
 
-    Purchase findByDate(Date date);
-    boolean deleteAllByDate(Date date);
-    void deleteAllByUserIdAndDate(int id, Date date);
     List<Purchase> findAllByUserId(int id);
 
 }

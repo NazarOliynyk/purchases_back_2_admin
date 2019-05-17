@@ -15,7 +15,6 @@ import java.util.Collections;
 
 public class RequestProcessingJWTFilter extends GenericFilterBean {
 
-    // reacts on every url (but we can change it if implement another filter)
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         Authentication authentication = null;
@@ -25,7 +24,7 @@ public class RequestProcessingJWTFilter extends GenericFilterBean {
         String token = httpServletRequest.getHeader("Authorization");
         // if present
         if (token != null) {
-            // parse it and retrive body subject from
+            // parse it and retrieve body subject from
             String user = Jwts.parser()
                     .setSigningKey("yes".getBytes())
                     .parseClaimsJws(token.replace("Bearer", ""))
