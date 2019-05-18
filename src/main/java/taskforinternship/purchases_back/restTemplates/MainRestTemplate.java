@@ -15,7 +15,8 @@ public class MainRestTemplate {
     private RestTemplate restTemplate = new RestTemplate();
     private ObjectMapper mapper = new ObjectMapper();
 
-    public double read(Purchase purchase) throws IOException {
+    public double read(Purchase purchase, CurrencyType currency)
+            throws IOException {
 
         String dateSubstring = String.valueOf(purchase.getDate().toInstant()).substring(0, 10);
 
@@ -28,17 +29,43 @@ public class MainRestTemplate {
         JsonNode root = mapper.readTree(response.getBody());
         JsonNode rates = root.path("rates");
 
-        double eur = Double.parseDouble(rates.path("UAH").asText());
+        double uah = Double.parseDouble(rates.path("UAH").asText());
+        double usd = Double.parseDouble(rates.path("USD").asText());
+        double pln = Double.parseDouble(rates.path("PLN").asText());
 
-        if(purchase.getCurrency().equals(CurrencyType.EUR)){
-            return eur;
-        }else if (purchase.getCurrency().equals(CurrencyType.USD)){
-            return eur / Double.parseDouble(rates.path("USD").asText());
-        }else if(purchase.getCurrency().equals(CurrencyType.PLN)){
-            return eur / Double.parseDouble(rates.path("PLN").asText());
-        }else {
-            return 1.0;
+        double rate = 0;
+
+        switch (purchase.getCurrency()){
+            case EUR:
+                switch (currency){
+                    case EUR: rate = 1; break;
+                    case UAH: rate = uah; break;
+                    case PLN: rate =  pln; break;
+                    case USD: rate =  usd; break;
+                }break;
+            case UAH:
+                switch (currency){
+                    case UAH: rate = 1.0; break;
+                    case EUR: rate = 1/uah; break;
+                    case USD: rate = usd/uah; break;
+                    case PLN: rate = pln/uah; break;
+                }break;
+            case USD:
+                switch (currency){
+                    case USD: rate = 1; break;
+                    case UAH: rate = uah/usd; break;
+                    case EUR: rate = 1/usd; break;
+                    case PLN: rate = pln/usd; break;
+                }break;
+            case PLN:
+                switch (currency){
+                    case PLN: rate = 1; break;
+                    case EUR: rate = 1/pln; break;
+                    case UAH: rate = uah/pln; break;
+                    case USD: rate = usd/pln; break;
+                }break;
         }
+        return rate;
     }
 
 }

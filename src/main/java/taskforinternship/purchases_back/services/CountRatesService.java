@@ -4,6 +4,7 @@ import org.decimal4j.util.DoubleRounder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import taskforinternship.purchases_back.dao.PurchaseDAO;
+import taskforinternship.purchases_back.models.CurrencyType;
 import taskforinternship.purchases_back.models.Purchase;
 import taskforinternship.purchases_back.restTemplates.MainRestTemplate;
 import java.io.IOException;
@@ -20,11 +21,11 @@ public class CountRatesService {
 
     private double sum;
 
-    private double getRate(Purchase purchase){
+    private double getRate(Purchase purchase, CurrencyType currency){
 
         double rate = 0;
         try {
-           rate= mainRestTemplate.read(purchase);
+           rate= mainRestTemplate.read(purchase, currency);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -37,19 +38,23 @@ public class CountRatesService {
         return yearFromDate.equals(year);
     }
 
-    public double count(String year, int id){
+    public double count(String year, int id, CurrencyType currency) {
         sum = 0;
         List<Purchase> purchases = purchaseDAO.findAllByUserId(id);
 
         List<Purchase> purchasesOfYear = purchases.stream()
-                .filter(p->yearEquals(year, p))
+                .filter(p -> yearEquals(year, p))
                 .collect(Collectors.toList());
+        if (purchasesOfYear.isEmpty()) {
+            return 0;
 
-        purchasesOfYear.forEach(purchase -> {
-            double priceUAH = purchase.getPrice()*getRate(purchase);
-            sum+= priceUAH;
-        });
+        } else {
+            purchasesOfYear.forEach(purchase -> {
+                double priceUAH = purchase.getPrice() * getRate(purchase, currency);
+                sum += priceUAH;
+            });
 
-        return DoubleRounder.round(sum, 2);
+            return DoubleRounder.round(sum, 2);
+        }
     }
 }

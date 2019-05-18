@@ -2,6 +2,7 @@ package taskforinternship.purchases_back.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import taskforinternship.purchases_back.models.CurrencyType;
 import taskforinternship.purchases_back.models.Purchase;
 import taskforinternship.purchases_back.models.ResponseTransfer;
 import taskforinternship.purchases_back.models.User;
@@ -62,9 +63,18 @@ public class MainRestController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/report/{id}")
-    public ResponseTransfer report(@PathVariable("id") int id,
-                           @RequestBody ResponseTransfer responseTransfer){
-        String year = responseTransfer.getText();
-        return new ResponseTransfer(countRatesService.count(year, id));
+    public ResponseTransfer<java.io.Serializable> report(@PathVariable("id") int id,
+                                                         @RequestBody ResponseTransfer responseTransfer){
+        String year = (String) responseTransfer.getText();
+        CurrencyType currency = responseTransfer.getCurrency();
+        System.out.println(currency);
+        double sum = countRatesService.count(year, id, currency);
+        if(sum==0){
+            return new ResponseTransfer<>
+                    ("No purchases of: "+year+" year to summarize");
+        }else {
+           return new ResponseTransfer<>(sum);
+        }
+
     }
 }

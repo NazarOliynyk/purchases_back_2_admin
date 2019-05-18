@@ -11,21 +11,46 @@ import java.util.Date;
 @EqualsAndHashCode
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ResponseTransfer {
+public class ResponseTransfer <S>{
 
-    String text;
-    double sum;
+    S text;
     Date date;
-
-    public ResponseTransfer(String text) {
+    CurrencyType currency;
+    public ResponseTransfer(S text) {
         this.text = text;
     }
 
-    public ResponseTransfer(Date date) {
-        this.date = date;
-    }
-
-    public ResponseTransfer(double sum) {
-        this.sum = sum;
+    public ResponseTransfer(CurrencyType currency) {
+        this.currency = currency;
     }
 }
+
+
+//
+//    static ResponseTransferBuilder builder(){
+//        return new ResponseTransferBuilder();
+//    }
+//
+//static class ResponseTransferBuilder{
+//
+//    ResponseTransfer responseTransfer = new ResponseTransfer();
+//
+//    public ResponseTransferBuilder text(String text){
+//        responseTransfer.text = text;
+//        return this;
+//    }
+//    public ResponseTransferBuilder sum(S sum){
+//        responseTransfer.sum = sum;
+//        return this;
+//    }
+//    public ResponseTransferBuilder mail(Date date){
+//        responseTransfer.date = date;
+//        return this;
+//    }
+//
+//    public ResponseTransfer build(){
+//        return responseTransfer;
+//    }
+//
+//}
+
