@@ -10,9 +10,11 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 @ToString(exclude = "user")
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder(toBuilder = true)
 public class Purchase implements Comparable<Purchase>{
 
     @Id

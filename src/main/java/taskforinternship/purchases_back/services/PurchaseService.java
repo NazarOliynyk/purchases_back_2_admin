@@ -22,12 +22,12 @@ public class PurchaseService {
     UserServiceImpl userServiceImpl;
 
 
-    public ResponseTransfer savePurchase(int id, Purchase purchase){
+    public ResponseTransfer<String> savePurchase(int id, Purchase purchase){
 
         User user = userServiceImpl.findOneById(id);
         purchase.setUser(user);
         purchaseDAO.save(purchase);
-        return new ResponseTransfer("Purchase was saved successfully");
+        return new ResponseTransfer<>("Purchase was saved successfully");
     }
 
     public List<Purchase> findAllByUserId(int id){
@@ -36,7 +36,7 @@ public class PurchaseService {
         return purchases;
     }
 
-    public ResponseTransfer deleteAllByUserIdAndDate(int id, Date date){
+    public ResponseTransfer<String> deleteAllByUserIdAndDate(int id, Date date){
 
         AtomicInteger counter = new AtomicInteger();
         List<Purchase> purchases = purchaseDAO.findAllByUserId(id);
@@ -46,12 +46,13 @@ public class PurchaseService {
                 purchaseDAO.delete(purchase);
             }
         });
+
         if(counter.intValue()>0){
-            return new ResponseTransfer(
+            return new ResponseTransfer<>(
                     "There were deleted: "+counter.intValue()+" purchases");
         }else {
-            return new ResponseTransfer("No purchases of this date!");
+            return new ResponseTransfer<>("No purchases of this date!");
         }
-    }
 
+    }
 }

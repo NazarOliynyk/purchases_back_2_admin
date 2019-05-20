@@ -67,7 +67,7 @@ public class MainRestController {
                                                          @RequestBody ResponseTransfer responseTransfer){
         String year = (String) responseTransfer.getText();
         CurrencyType currency = responseTransfer.getCurrency();
-        System.out.println(currency);
+
         double sum = countRatesService.count(year, id, currency);
         if(sum==0){
             return new ResponseTransfer<>

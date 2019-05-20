@@ -26,31 +26,3 @@ public class ResponseTransfer <S>{
 }
 
 
-//
-//    static ResponseTransferBuilder builder(){
-//        return new ResponseTransferBuilder();
-//    }
-//
-//static class ResponseTransferBuilder{
-//
-//    ResponseTransfer responseTransfer = new ResponseTransfer();
-//
-//    public ResponseTransferBuilder text(String text){
-//        responseTransfer.text = text;
-//        return this;
-//    }
-//    public ResponseTransferBuilder sum(S sum){
-//        responseTransfer.sum = sum;
-//        return this;
-//    }
-//    public ResponseTransferBuilder mail(Date date){
-//        responseTransfer.date = date;
-//        return this;
-//    }
-//
-//    public ResponseTransfer build(){
-//        return responseTransfer;
-//    }
-//
-//}
-

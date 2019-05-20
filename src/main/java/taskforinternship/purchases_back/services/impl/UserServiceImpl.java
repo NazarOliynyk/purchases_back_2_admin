@@ -22,11 +22,11 @@ public class UserServiceImpl implements UserService {
     public ResponseTransfer saveUser(User user) {
 
         if (userDAO.existsByUsername(user.getUsername())) {
-            return new ResponseTransfer("User with such login already exists!!");
+            return new ResponseTransfer<>("User with such login already exists!!");
         }else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userDAO.save(user);
-            return new ResponseTransfer("User was saved successfully.");
+            return new ResponseTransfer<>("User was saved successfully.");
         }
     }
 
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseTransfer deleteById(int id) {
         userDAO.deleteById(id);
-        return new ResponseTransfer("Account was deleted successfully");
+        return new ResponseTransfer<>("Account was deleted successfully");
     }
 
     @Override
