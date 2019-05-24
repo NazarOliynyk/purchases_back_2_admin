@@ -24,7 +24,6 @@ import java.util.Date;
 
 public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
-    private User user;
     private UserDetailsService userDetailsService;
 
     public LoginFilter(String url, AuthenticationManager authManager, UserDetailsService userDetailsService) {
@@ -39,7 +38,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
             (HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
             throws AuthenticationException, IOException, ServletException {
 
-        user = new ObjectMapper()
+        User user = new ObjectMapper()
                 .readValue(httpServletRequest.getInputStream(), User.class);
 
         return getAuthenticationManager().authenticate(
@@ -58,19 +57,23 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     protected void successfulAuthentication(
             HttpServletRequest req,
             HttpServletResponse res, FilterChain chain,
-            Authentication auth) throws IOException, ServletException {
+            Authentication auth) throws IOException {
 
-
+        User userLoged = new User();
         String jwtoken = Jwts.builder()
-                .setSubject(auth.getName()) // this auth goes from the previous method
-                // returned from that method
+                .setSubject(auth.getName())
+
                 .signWith(SignatureAlgorithm.HS512, "yes".getBytes())
                 .setExpiration(new Date(System.currentTimeMillis() + 600000))
                 .compact();
 
         res.addHeader("Authorization", "Bearer " + jwtoken);
-        User userLogged= (User) userDetailsService.loadUserByUsername(auth.getName());
-        System.out.println(userLogged.toString());
-        res.addHeader("UserLogged", new ObjectMapper().writeValueAsString(userLogged));
+
+        if(auth.getName().equals("admin")){
+            userLoged.setUsername("admin");
+        }else {
+            userLoged = (User) userDetailsService.loadUserByUsername(auth.getName());
+        }
+        res.addHeader("UserLogged", new ObjectMapper().writeValueAsString(userLoged));
     }
 }

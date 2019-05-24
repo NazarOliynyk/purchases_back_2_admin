@@ -12,5 +12,7 @@ public interface UserService extends UserDetailsService {
 
     User findOneById(Integer id);
 
+    List<User> findAll();
+
     ResponseTransfer deleteById(int id);
 }

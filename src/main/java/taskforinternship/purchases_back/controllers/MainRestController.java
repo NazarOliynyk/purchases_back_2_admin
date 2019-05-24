@@ -40,6 +40,12 @@ public class MainRestController {
     }
 
     @CrossOrigin(origins = "*")
+    @GetMapping("/admin/findAllUsers")
+    public List<User> findAllUsers(){
+        return userServiceImpl.findAll();
+    }
+
+    @CrossOrigin(origins = "*")
     @PostMapping("/savePurchase/{id}")
     public ResponseTransfer savePurchase(@PathVariable("id") int id,
                                          @RequestBody Purchase purchase){

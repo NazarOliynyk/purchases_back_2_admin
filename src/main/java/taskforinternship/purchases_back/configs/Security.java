@@ -53,7 +53,7 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll() // by default method get
                 .antMatchers(HttpMethod.POST, "/login", "/saveUser").permitAll()
                 .anyRequest().authenticated()
-                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET,"/admin/**").hasRole("ADMIN")
                 .and()
                 // We filter the api/login requests
                 .addFilterBefore(new RequestProcessingJWTFilter(), UsernamePasswordAuthenticationFilter.class)

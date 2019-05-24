@@ -10,6 +10,8 @@ import taskforinternship.purchases_back.models.ResponseTransfer;
 import taskforinternship.purchases_back.models.User;
 import taskforinternship.purchases_back.services.UserService;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -21,7 +23,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseTransfer saveUser(User user) {
 
-        if (userDAO.existsByUsername(user.getUsername())) {
+        if (user.getUsername().equals("admin") ||
+                userDAO.existsByUsername(user.getUsername())) {
             return new ResponseTransfer<>("User with such login already exists!!");
         }else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -35,6 +38,10 @@ public class UserServiceImpl implements UserService {
         return userDAO.getOne(id);
     }
 
+    @Override
+    public List<User> findAll() {
+        return userDAO.findAll();
+    }
 
     @Override
     public ResponseTransfer deleteById(int id) {
